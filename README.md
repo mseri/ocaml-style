@@ -73,7 +73,7 @@ Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc.go)
 [Upenn]:            https://www.seas.upenn.edu/~cis341/current/programming_style.shtml
 [OCaml Tutorial]:   https://ocaml.org/learn/tutorials/guidelines.html
 [OCaml Manual]:     http://caml.inria.fr/pub/docs/manual-ocaml/index.html
-[Real World OCaml]: https://realworldocaml.org/
+[Real World OCaml]: https://dev.realworldocaml.org/
 [OCaml Guidelines]: https://ocaml.org/learn/tutorials/guidelines.html
 
 ## Guiding Principles
@@ -224,19 +224,15 @@ General considerations:
 * Local names can be short, type variables very short. In general, the
   length of a name should be proportional to the size of its scope.
 * Prefer short, but self-describing names in public interfaces.
-* Use scoping (`let`, `struct`) to keep the number of names in a scope
-  small.
+* Use scoping (let, modules) to keep the number of names in a scope small.
 * Avoid encoding the type into a name: `x_int` or `x_opt` is usually not
   better than `x`.
-* Avoid repeating the module name in names for types and values:
-  `QMP.connection` is a better name for a type than
-  `QMP.qmp_connection`.
 * In a functional language like [OCaml], using `get` as part of a name
   is often redundant unless it involves obtaining a value from a database
   or file.
 * You may see auto-generated code use the style `.mIX_case` where
   `.MIX_case` was meant, but record fields cannot start with capital
-  letters.  Avoid this style.
+  letters.  Avoid this in code your write.
 * You can use longer names for type variables if it improves clarity,
   e.g. for phantom types.
 
@@ -266,9 +262,6 @@ Special cases:
     let empty = Empty
   end
 ```
-
-This ties in with the recommendation above to not use `tree` for
-the type declaration in module `Tree`.
 
 ## Scoping
 
@@ -318,11 +311,10 @@ for grouping doesn't require an interface.
 
 More details are in the [OCaml Manual](http://caml.inria.fr/pub/docs/manual-ocaml/lex.html).
 
-* When defining strings that need to contain lots of escaped quotes or
-  backslashes (such as regular expressions), prefer to use the `{|...|}`
-  form instead of `"..."` (see [8.18 Quoted
-  Strings](https://caml.inria.fr/pub/docs/manual-ocaml/extn.html#sec263)):
-  e.g. use `{|["\]|}` instead of `"[\"\\]"`
+* When defining strings that need to contain lots of escaped quotes or backslashes (such as regular expressions),
+  prefer to use the `{|...|}` form instead of `"..."` (see [8.18 Quoted Strings](https://caml.inria.fr/pub/docs/manual-ocaml/extn.html#sec263)):
+  
+   e.g. use `{|["\]|}` instead of `"[\"\\]"`
 
 ## Introduce and Document Interfaces
 
@@ -451,7 +443,7 @@ Between opening a module globally and not at all, several options exist.
 
 ```
 
-* Open a module locally with `Module.(...)`:
+* Open a module locally with Module.()
 
 ```ocaml
   Int64.(add (of_int x) 1_000_000L)
@@ -465,10 +457,9 @@ Between opening a module globally and not at all, several options exist.
 ```
 
   This is especially effective to access constructors that are defined
-  inside another module.
+  inside a module
 
-* Define a sub-module that is meant to be opened (locally), to be used
-  sparingly:
+* Define a sub-module that is meant to be opened (locally), to be used sparingly:
 
 ```ocaml
   module M = struct
@@ -515,9 +506,9 @@ Using `!=` and `==` for equality is probably wrong and you should use
 1. Structural equality, tested with `=` and `<>`. This compares the
    shape of two values and is typically the correct choice.
 
-2. Physical equality (pointer equality), tested with `==` and `!=`. This
-   compares the address in memory of two values. This is typically used
-   in performance-oriented code. Pointer equality implies structural
+2. Physical equality (pointer equality), tested with `==` and `!=`. This compares the
+   address in memory of two values. This is typically used in
+   performance-oriented code. Pointer equality implies structural
    equality but not vice versa.
 
 
@@ -698,6 +689,11 @@ pipe operator. In the latter the data from the argument `xs` flows
 through the function definition from top to bottom and left to right.
 In the more traditional definition, data flows from right to left.
 
+
+
+
+
+
 ## Functions - Avoid Deep Nesting
 
 Code that is deeply nested is hard to read and hard to test. This
@@ -789,9 +785,9 @@ it locally.
 Resources that need to be managed are not just files but can be
 anything like database and network connections or timers.
 
-Amore finer detail is that care should be taken not to destroy the
-backtrace of an exception if the code in finally (or functions called by
-it) raise/catch exceptions of its own.
+A more finer detail is that care should be taken not to destroy the backtrace
+of an exception if the code in finally (or functions called by it)
+raise/catch exceptions of its own.
 
 ## Compare Functions
 
